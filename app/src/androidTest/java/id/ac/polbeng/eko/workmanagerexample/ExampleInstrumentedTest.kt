@@ -1,4 +1,4 @@
-package id.ac.polbeng.asmira.workmanagerexample
+package id.ac.polbeng.eko.workmanagerexample
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

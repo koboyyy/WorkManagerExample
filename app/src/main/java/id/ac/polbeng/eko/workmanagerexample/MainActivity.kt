@@ -1,6 +1,4 @@
-package id.ac.polbeng.asmira.workmanagerexample
-
-
+package id.ac.polbeng.eko.workmanagerexample
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -15,80 +13,66 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import androidx.work.workDataOf
-import id.ac.polbeng.asmira.workmanagerexample.databinding.ActivityMainBinding
+import id.ac.polbeng.eko.workmanagerexample.databinding.ActivityMainBinding
 import java.util.UUID
 import java.util.concurrent.TimeUnit
-
 class MainActivity : AppCompatActivity() {
-
     private val workManager by lazy {
         WorkManager.getInstance(applicationContext)
     }
-
     private val constraints = Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.CONNECTED)
-        .setRequiresStorageNotLow(true)
+        .setRequiredNetworkType(NetworkType.CONNECTED).setRequiresStorageNotLow(true)
         .setRequiresBatteryNotLow(true)
         .build()
-
     private val maxCounter = workDataOf(LoopWorker.COUNTER to 10)
-
     private lateinit var activityHomeBinding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityHomeBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityHomeBinding.root)
-
         activityHomeBinding.btnImageDownload.setOnClickListener {
             showLottieAnimation()
             activityHomeBinding.tvProgress.visibility = View.VISIBLE
             activityHomeBinding.downloadLayout.visibility = View.GONE
             createOneTimeWorkRequest()
-            //createPeriodicWorkRequest()
-            //createDelayedWorkRequest()
+//createPeriodicWorkRequest()
+//createDelayedWorkRequest()
         }
-
         activityHomeBinding.btnQueryWork.setOnClickListener {
             queryWorkInfo()
         }
     }
-
     private fun showLottieAnimation() {
         activityHomeBinding.animationView.visibility = View.VISIBLE
     }
-
     private fun hideLottieAnimation() {
         activityHomeBinding.animationView.visibility = View.GONE
     }
-
     private fun createOneTimeWorkRequest() {
-        // 1
+// 1
         val imageWorker = OneTimeWorkRequestBuilder<LoopWorker>()
             .setInputData(maxCounter)
             .setConstraints(constraints)
             .addTag("imageWork")
             .build()
-        // 2
+// 2
         workManager.enqueueUniqueWork(
             "oneTimeImageDownload",
             ExistingWorkPolicy.KEEP,
             imageWorker
         )
-        //3
+//3
         observeWork(imageWorker.id)
     }
-
     private fun observeWork(id: UUID) {
-        // 1
+// 1
         workManager.getWorkInfoByIdLiveData(id)
             .observe(this) { info ->
-                if(info != null){
-                    val progress = info.progress
+                if(info != null){val progress = info.progress
                     val value = progress.getInt(LoopWorker.PROGRESS, 0)
-                    activityHomeBinding.tvProgress.text = "Progress                    $value%"
+                    activityHomeBinding.tvProgress.text = "Progress$value%"
                 }
-                // 2
+// 2
                 if (info != null && info.state.isFinished) {
                     hideLottieAnimation()
                     activityHomeBinding.tvProgress.visibility = View.GONE
@@ -96,10 +80,9 @@ class MainActivity : AppCompatActivity() {
                         View.GONE
                     activityHomeBinding.btnQueryWork.visibility =
                         View.VISIBLE
-
                     activityHomeBinding.downloadLayout.visibility =
                         View.VISIBLE
-                    // 3
+// 3
                     val message =
                         info.outputData.getString(LoopWorker.MESSAGE)
                     if (message != null) {
@@ -109,16 +92,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
     }
-
     private fun createPeriodicWorkRequest() {
-        // 1
+// 1
         val imageWorker = PeriodicWorkRequestBuilder<LoopWorker>(
             2, TimeUnit.MINUTES)
             .setInputData(maxCounter)
             .setConstraints(constraints)
             .addTag("imageWork")
             .build()
-        // 2
+// 2
         workManager.enqueueUniquePeriodicWork(
             "periodicImageDownload",
             ExistingPeriodicWorkPolicy.KEEP,
@@ -126,7 +108,6 @@ class MainActivity : AppCompatActivity() {
         )
         observeWork(imageWorker.id)
     }
-
     private fun createDelayedWorkRequest() {
         val imageWorker = OneTimeWorkRequestBuilder<LoopWorker>()
             .setInputData(maxCounter)
@@ -139,8 +120,7 @@ class MainActivity : AppCompatActivity() {
             ExistingWorkPolicy.KEEP,
             imageWorker
         )
-        observeWork(imageWorker.id)
-    }
+        observeWork(imageWorker.id)}
     private fun queryWorkInfo() {
 // 1
         val workQuery = WorkQuery.Builder

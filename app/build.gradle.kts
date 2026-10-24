@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "id.ac.polbeng.asmira.workmanagerexample"
+    namespace = "id.ac.polbeng.eko.workmanagerexample"
     compileSdk {
         version = release(37) {
             minorApiLevel = 1
@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "id.ac.polbeng.asmira.workmanagerexample"
+        applicationId = "id.ac.polbeng.eko.workmanagerexample"
         minSdk = 27
         targetSdk = 36
         versionCode = 1
